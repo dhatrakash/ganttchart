@@ -1,0 +1,13 @@
+/* Clear floats */
+.gantt-chart-center::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  
+  /* Center-align the Gantt Chart */
+  .gantt-chart-center {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
