@@ -1,0 +1,286 @@
+components:
+  schemas:
+    Machine:
+      type: object
+      properties:
+        machineName:
+          type: string
+        machineId:
+          type: string
+        gateway:
+          type: string
+        machine_type:
+          type: string
+          enum:
+            - hardwire
+            - controller
+        machineLocation:
+          type: string
+        machineMake:
+          type: string
+        mfgEmail:
+          type: string
+        machineMakeYear:
+          type: integer
+        machineWarranty:
+          type: integer
+        maintenancePerson:
+          type: string
+        machinePhoto:
+          type: object
+          properties:
+            base64:
+              type: string
+            contentType:
+              type: string
+        controllerMake:
+          type: string
+        controllerMakeYear:
+          type: integer
+        controllerPhoto:
+          type: object
+          properties:
+            base64:
+              type: string
+            contentType:
+              type: string
+        powerSupplyRating:
+          type: number
+        inputMethod:
+          type: string
+          enum:
+            - STABILIZER
+            - UPS
+            - OTHER
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Slaves'
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Io'
+        statusMapping:
+          type: object
+          properties:
+            idle:
+              type: number
+            productive:
+              type: number
+
+    Gateway:
+      type: object
+      properties:
+        gatewayId:
+          type: string
+        macId:
+          type: string
+        name:
+          type: string
+        ip:
+          type: string
+        port:
+          type: integer
+        isActive:
+          type: boolean
+        issuedDate:
+          type: string
+          format: date-time
+        updatedDate:
+          type: string
+          format: date-time
+        slaves:
+          type: array
+          items:
+            $ref: '#/components/schemas/Slaves'
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Io'
+
+    Slaves:
+      type: object
+      properties:
+        sid:
+          type: string
+        connectedSensors:
+          type: array
+          items:
+            type: object
+            properties:
+              sensorId:
+                type: string
+              tag:
+                type: string
+
+    Io:
+      type: object
+      properties:
+        diId:
+          type: string
+        sensorId:
+          type: string
+        tag:
+          type: string
+
+
+    ConnectedSensor:
+      type: object
+      properties:
+        sensorId:
+          type: string
+          example: "64fe9e35ca6f83844cfdb95c"
+        tag:
+          type: string
+          example: "temp"
+
+    Conversion:
+      type: object
+      properties:
+        unit:
+          type: string
+          example: "°C"
+        scale:
+          type: number
+          example: 1.0
+        sourceUnit:
+          type: string
+          example: "Fahrenheit"
+        targetUnit:
+          type: string
+          example: "Celsius"
+        formula:
+          type: string
+          example: "((F - 32) * 5/9)"
+        precision:
+          type: number
+          example: 2
+        description:
+          type: string
+          example: "Conversion from Fahrenheit to Celsius"
+
+    Sensor:
+      type: object
+      properties:
+        sensorName:
+          type: string
+          example: "Temperature Sensor"
+        sensorType:
+          type: string
+          example: "Temperature"
+        location:
+          type: string
+          example: "Factory Floor"
+        manufacturer:
+          type: string
+          example: "XYZ Electronics"
+        model:
+          type: string
+          example: "Model ABC123"
+        serialNumber:
+          type: string
+          example: "SN12345"
+        calibrationDate:
+          type: string
+          format: date
+          example: "2023-09-15"
+        accuracy:
+          type: string
+          example: "±0.5°C"
+        measurementRange:
+          type: string
+          example: "-20°C to 100°C"
+        operatingTemperature:
+          type: string
+          example: "-10°C to 70°C"
+        powerSupply:
+          type: string
+          example: "12V DC"
+        dataFormat:
+          type: string
+          example: "Analog"
+        sensorStatus:
+          type: string
+          example: "Operational"
+        sensorDescription:
+          type: string
+          example: "This sensor measures ambient temperature."
+        conversion:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conversion'
+      required: 
+        - sensorName
+        - sensorType
+
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+        expires:
+          type: string
+          format: date-time
+      example:
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
+        expires: 2020-05-12T16:18:04.793Z
+
+    AuthTokens:
+      type: object
+      properties:
+        access:
+          $ref: '#/components/schemas/Token'
+        refresh:
+          $ref: '#/components/schemas/Token'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+
+  responses:
+    DuplicateEmail:
+      description: Email already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Email already taken
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 401
+            message: Please authenticate
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 403
+            message: Forbidden
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: Not found
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

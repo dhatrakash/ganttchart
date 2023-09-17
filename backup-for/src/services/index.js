@@ -1,0 +1,11 @@
+module.exports.authService = require('./auth.service');
+module.exports.emailService = require('./email.service');
+module.exports.tokenService = require('./token.service');
+module.exports.userService = require('./user.service');
+module.exports.HardwareService = require('./hardware.service');
+module.exports.mqttService = require('./mqtt.services');
+module.exports.testService = require('./test.services');
+module.exports.sensorService = require('./sensor.service');
+module.exports.machineService = require('./machine.service');
+// module.exports.fanucService = require('./fanuc.service');
+module.exports.fanucControllerService = require('./fanuc.control.service');
